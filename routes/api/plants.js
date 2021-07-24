@@ -28,7 +28,6 @@ router.get("/:id", (req, res) => {
 // Create a plant
 router.post("/", (req, res) => {
     const { name, status } = req.body;
-    if (!status) status = 0;
     if (!name) {
         res.status(400).json({
             err: "Missing plant name",
