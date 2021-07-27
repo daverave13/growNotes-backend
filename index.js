@@ -22,19 +22,19 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use("/api/plants", require("./routes/api/plants"));
 app.use("/api/events", require("./routes/api/events"));
 
-const PORT = process.env.PORT || 5001;
+// const PORT = process.env.PORT || 5001;
 
-app.listen(PORT, () => console.log(`Server started on port ${PORT}`));
+// app.listen(PORT, () => console.log(`Server started on port ${PORT}`));
 
 //listen on both http and https
-// const httpsServer = https.createServer(
-//     {
-//         key: fs.readFileSync("/etc/letsencrypt/live/dslusser.com/privkey.pem"),
-//         cert: fs.readFileSync(
-//             "/etc/letsencrypt/live/dslusser.com/fullchain.pem"
-//         ),
-//     },
-//     app
-// );
+const httpsServer = https.createServer(
+    {
+        key: fs.readFileSync("/etc/letsencrypt/live/dslusser.com/privkey.pem"),
+        cert: fs.readFileSync(
+            "/etc/letsencrypt/live/dslusser.com/fullchain.pem"
+        ),
+    },
+    app
+);
 
-// httpsServer.listen(5001, "0.0.0.0");
+httpsServer.listen(5001, "0.0.0.0");
