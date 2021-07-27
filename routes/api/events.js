@@ -38,7 +38,7 @@ router.post("/", (req, res) => {
             err: "plant_id, note and type are required",
         });
     } else {
-        const sql = `insert into events (id, plant_id, type, note) VALUES (default, ${plant_id}, '${type}', '${note}');`;
+        const sql = `insert into events (id, plant_id, type, note) VALUES (default, ${plant_id}, '${type.toLowerCase()}', '${note}');`;
         connection.query(sql, (err, results) => {
             if (err) throw err;
             res.send(results);

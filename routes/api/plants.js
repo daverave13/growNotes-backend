@@ -5,6 +5,23 @@ const growNotesSchema = require("../../public/connections/growNotesSchema");
 
 const connection = mysql.createConnection(growNotesSchema);
 
+const convertStatusToInt = (strStatus) => {
+    if (Number(strStatus) < 4 && Number(strStatus) >= 0)
+        return Number(strStatus);
+    switch ((strStatus + "").toLowerCase()) {
+        case "seed":
+            return 0;
+        case "planted":
+            return 1;
+        case "bloomed":
+            return 2;
+        case "harvested":
+            return 3;
+        default:
+            return 0;
+    }
+};
+
 // Get all plants
 router.get("/", (req, res) => {
     const sql = `SELECT * FROM plants;`;
@@ -27,7 +44,9 @@ router.get("/:id", (req, res) => {
 
 // Create a plant
 router.post("/", (req, res) => {
-    const { name, status } = req.body;
+    const { name } = req.body;
+    const status = convertStatusToInt(req.body.status);
+
     if (!name) {
         res.status(400).json({
             err: "Missing plant name",
@@ -44,7 +63,8 @@ router.post("/", (req, res) => {
 // Update a plant
 router.put("/:id", (req, res) => {
     const { id } = req.params;
-    const { name, status } = req.body;
+    const { name } = req.body;
+    const status = convertStatusToInt(req.body.status);
 
     let sql = `UPDATE plants SET name = '${name}', status = ${status} WHERE id = '${id}';`;
 
