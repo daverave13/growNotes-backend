@@ -5,6 +5,14 @@ const growNotesSchema = require("../../public/connections/growNotesSchema");
 
 const connection = mysql.createConnection(growNotesSchema);
 
+const escapeCharsFromString = (strInput) => {
+    return strInput
+        .replace(/\\/g, "\\\\")
+        .replace(/\$/g, "\\$")
+        .replace(/'/g, "\\'")
+        .replace(/"/g, '\\"');
+};
+
 const convertStatusToInt = (strStatus) => {
     if (Number(strStatus) < 4 && Number(strStatus) >= 0)
         return Number(strStatus);
