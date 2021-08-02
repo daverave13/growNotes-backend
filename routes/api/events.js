@@ -5,6 +5,14 @@ const growNotesSchema = require("../../public/connections/growNotesSchema");
 
 const connection = mysql.createConnection(growNotesSchema);
 
+const escapeCharsFromString = (strInput) => {
+    return strInput
+        .replace(/\\/g, "\\\\")
+        .replace(/\$/g, "\\$")
+        .replace(/'/g, "\\'")
+        .replace(/"/g, '\\"');
+};
+
 // Get all events
 router.get("/", (req, res) => {
     const sql = `SELECT * FROM events;`;
@@ -38,7 +46,9 @@ router.post("/", (req, res) => {
             err: "plant_id, note and type are required",
         });
     } else {
-        const sql = `insert into events (id, plant_id, type, note) VALUES (default, ${plant_id}, '${type.toLowerCase()}', '${note}');`;
+        const sql = `insert into events (id, plant_id, type, note) VALUES (default, ${plant_id}, '${type.toLowerCase()}', '${escapeCharsFromString(
+            note
+        )}');`;
         connection.query(sql, (err, results) => {
             if (err) throw err;
             res.send(results);
@@ -53,7 +63,11 @@ router.put("/:id", (req, res) => {
 
     let sql = `UPDATE events SET `;
 
-    for (key in body) if (body[key]) sql += `${key} = '${body[key]}', `;
+    for (key in body)
+        if (body[key]) {
+            if (typeof key === "string") key = escapeCharsFromString(key);
+            sql += `${key} = "${body[key]}", `;
+        }
     sql = sql.slice(0, sql.length - 2);
     sql += `WHERE id = '${id}';`;
 

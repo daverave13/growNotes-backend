@@ -52,7 +52,9 @@ router.post("/", (req, res) => {
             err: "Missing plant name",
         });
     } else {
-        const sql = `INSERT INTO plants (id, name, status) VALUES (default, '${name}', ${status});`;
+        const sql = `INSERT INTO plants (id, name, status) VALUES (default, '${escapeCharsFromString(
+            name
+        )}', ${status});`;
         connection.query(sql, (err, results) => {
             if (err) throw err;
             res.send(results);
@@ -66,7 +68,9 @@ router.put("/:id", (req, res) => {
     const { name } = req.body;
     const status = convertStatusToInt(req.body.status);
 
-    let sql = `UPDATE plants SET name = '${name}', status = ${status} WHERE id = '${id}';`;
+    let sql = `UPDATE plants SET name = '${escapeCharsFromString(
+        name
+    )}', status = ${status} WHERE id = '${id}';`;
 
     connection.query(sql, (err, results) => {
         if (err) throw err;
