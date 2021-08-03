@@ -93,6 +93,13 @@ router.delete("/:id", (req, res) => {
         if (err) throw err;
         res.send(results);
     });
+
+    const sqlDeleteRelatedEvents = `DELETE FROM events WHERE plant_id = ${req.params.id}`;
+
+    connection.query(sqlDeleteRelatedEvents, (err, results) => {
+        if (err) throw err;
+        res.send(results);
+    });
 });
 
 module.exports = router;
